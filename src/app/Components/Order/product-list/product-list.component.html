@@ -1,0 +1,121 @@
+<div class="row">
+  <div *ngFor="let proditem of prodList" class="card" style="width: 18rem">
+    <div class="col-md-12">
+      <img class="card-img-top" [src]="proditem.imgURL" alt="Card image cap" />
+      <div class="card-body">
+        <h5 class="card-title">{{ proditem.name }}</h5>
+        <p class="card-text"></p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Quantity : {{ proditem.quantity }}</li>
+        <li class="list-group-item">Price:{{ proditem.price }}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<br />
+<hr />
+<div class="mb-3">
+  <label for="" class="form-label">Category:</label>
+  <!-- first app <select  #IdSelected class="form-select form-select-lg" name="" id="" (change)="SelectedId(IdSelected.value)"> -->
+  <!-- ng model this for change content when ues select or dropdwan or any thnks -->
+  <select
+    class="form-select form-select-lg"
+    name=""
+    id=""
+    [(ngModel)]="selectedCat"
+  >
+    <option *ngFor="let item of catList" [value]="item.id">
+      {{ item.name }}
+    </option>
+  </select>
+  <div class="text-secondary">[to be removed] for test:: {{ selectedCat }}</div>
+  <a
+    name=""
+    id=""
+    class="btn btn-primary"
+    href="#"
+    role="button"
+    (click)="changeCat()"
+    >change dropdown</a
+  >
+  <div>{{orderDate | date:'shortDate'}}</div>
+  <!-- <a name="" id="" class="btn btn-primary" href="#" role="button" (click)="changeCat($event)">change dropdown</a> event.target.value -->
+</div>
+
+<hr />
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">No.</th>
+      <th scope="col">Name</th>
+      <th scope="col">quantity</th>
+      <th scope="col">price on $</th>
+      <th scope="col">price on JOD</th>
+      <th scope="col">Iamge</th>
+      <th scope="col">Count</th>
+      <th scope="col">Buy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- <tr *ngFor="let proditem of prodList" [class.d-none]="selectedCat!=proditem?.id"> -->
+    <!-- <tr *ngFor="let proditem of prodList ;  let i =index  "   > to get index number  -->
+    <!-- <tr  *ngFor="let proditem of prodList ;  index as i "; trackBy:ProdTrackFn  > ProdTrackFn to improve perfomace lopping without re build loop -->
+    <!-- <tr  *ngFor="let proditem of prodList ;  index as i " [hidden]="proditem.quantity==2 " > -->
+    <!--ngif (Structural di  r)-->
+    <!-- <ng-container    *ngFor="let proditem of prodList ;  index as i " > -->
+    <tr *ngFor="let proditem of prodList; index as i">
+      <!-- safe navigation operator -->
+      <!-- interpolation{{}} -->
+      <!-- <tr *ngIf="proditem.quantity!=2"> -->
+      <td>{{ i + 1 }}</td>
+      <!-- <td [style.color]="proditem.quantity == 2 ? 'red' : 'blue'"> -->
+      <td [ngClass]="{'text-secondary':proditem.quantity==2,'text-primary':proditem.quantity==5}">
+        {{ proditem?.name }}
+      </td>
+      <td>
+        <!-- <div *ngIf="proditem.quantity!=2 ;else OutOfStock">{{proditem?.quantity}}</div> -->
+        <!-- <div *ngIf="proditem.quantity!=2 ;else OutOfStock">{{proditem?.quantity}}</div> -->
+
+      <ng-container [ngSwitch]="proditem.quantity">  <!-- ng-container not create on dom and vlaue ngswitchcase if T show on dom F not shown  -->
+          <div *ngSwitchCase="2">Tow</div>
+          <div *ngSwitchCase="5">Five</div>
+          <div *ngSwitchDefault>{{ proditem?.quantity }}</div>
+        </ng-container>
+        <ng-template #OutOfStock> it's 2 qty</ng-template>
+      </td>
+      <td>{{ proditem?.price | currency:'USD':'symbol' }}</td>
+      <td>{{ proditem.price | uSDToJOD :0.71| currency:'JOD':'symbol' }}</td>
+      <td>
+        <!-- defaultColor same attr on JQuery -->
+        <!-- <img LightBox highlightColor="red" 
+          class="card-img-top"
+          style="width: 40px; height: 40px"
+          [src]="proditem.imgURL"
+          alt="Card image cap"
+        /> -->
+        <img LightBox="red" 
+        defaultColor="green"
+          class="card-img-top"
+          style="width: 40px; height: 40px"
+          [src]="proditem.imgURL"
+          alt="Card image cap"
+        />
+      </td>
+      <!-- templetvarible-->
+      <td><input #itemCount type="number" class="form-control" /></td>
+      <td>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="buy(proditem.price, itemCount.value)"
+        >
+          Total Price
+        </button>
+      </td>
+    </tr>
+    <!-- </ng-container> -->
+  </tbody>
+</table>
+<hr />
+<h3>Order Total Price :{{ totalPrice }}</h3>
