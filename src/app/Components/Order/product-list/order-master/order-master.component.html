@@ -1,0 +1,17 @@
+<select
+class="form-select col-md-3 form-select-lg"
+name=""
+id=""
+[(ngModel)]="selectedCat"
+
+
+>
+<option value="0">All</option>
+<option *ngFor="let item of catList" [value]="item.id">
+  {{ item.name }}
+</option>
+</select>
+<hr>
+<app-product-list [catId]="selectedCat" (totalPriceChange)="onTotalPriceChange($event)" ></app-product-list>
+<hr>
+<h3>Order Total Price:{{receiveorderTotalPrice}}</h3>
