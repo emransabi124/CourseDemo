@@ -12,6 +12,38 @@ id=""
 </option>
 </select>
 <hr>
-<app-product-list [catId]="selectedCat" (totalPriceChange)="onTotalPriceChange($event)" ></app-product-list>
+<app-product-list [catId]="selectedCat" [removeFromParent]="removeToChild"  (ProdList)="buyfromChildOptput($event)" ></app-product-list>
+<!-- <app-product-list [catId]="selectedCat" (totalPriceChange)="onTotalPriceChange($event)" (ProdList)="buyfromChildOptput($event)" ></app-product-list> -->
 <hr>
-<h3>Order Total Price:{{receiveorderTotalPrice}}</h3>
+
+
+
+<table class="table">
+  <thead class="thead-dark">
+    <th>no.</th>
+    <th>Name</th>
+    <th>Price</th>
+    <th>Count</th>
+    <th>Action</th>
+  </thead>
+  <tbody *ngFor="let item of prodList  index as i">
+
+    <tr >
+      
+<th>{{i+1}}</th>
+<th>{{item.name}}</th>
+<th>{{item.price  | uSDToJOD :0.71| currency:'JOD':'symbol'}}</th>
+<th> {{item.count  }}</th>
+<th> <button
+  type="button"
+  class="btn btn-primary"
+  (click)="RemoveRow(item.id)"
+  >
+remove Item
+  </button></th>
+
+    </tr>
+  </tbody>
+
+</table>
+<h3>Order Total Price:{{receiveorderTotalPrice  | uSDToJOD :0.71| currency:'JOD':'symbol'}}</h3>

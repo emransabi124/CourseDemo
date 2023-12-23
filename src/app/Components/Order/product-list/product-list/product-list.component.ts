@@ -6,10 +6,10 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { iif } from 'rxjs';
 import { ICategory } from 'src/app/Model/icategory';
 import { Iobject } from 'src/app/Model/iobject';
 import { IProduct } from 'src/app/Model/iproduct';
- 
 
 @Component({
   selector: 'app-product-list',
@@ -18,20 +18,27 @@ import { IProduct } from 'src/app/Model/iproduct';
 })
 export class ProductListComponent implements OnChanges {
   @Input() catId: number = 0;
+  @Input() removeFromParent:Iobject[];
   prodList: IProduct[];
-iobject: Iobject[]=[];
+  iobject: Iobject[];
   prodOfCatList: IProduct[] = [];
   data: any;
   //event publisher define
   @Output() totalPriceChange: EventEmitter<number>;
+  @Output() ProdList: EventEmitter<Iobject[]>;
   totalPrice: number = 0;
   orderDate = new Date();
+  removeFromParentinChild:Iobject[];
   /**
    *
    */
   constructor() {
-    this.iobject=[];
+   
+    this.iobject = [];
+    this.removeFromParent=[];
+    this.removeFromParentinChild=this.removeFromParent;
     this.totalPriceChange = new EventEmitter<number>();
+    this.ProdList = new EventEmitter<Iobject[]>();
     this.orderDate = new Date();
     this.prodList = [
       {
@@ -88,7 +95,6 @@ iobject: Iobject[]=[];
   }
 
   ngOnChanges(): void {
-    console.log(this.catId);
     this.data = this.filterProductsByCatId();
 
     // this.prodOfCatList= this.prodList.filter(p=>p.categoryID==this.catId);
@@ -117,7 +123,7 @@ iobject: Iobject[]=[];
     // this.totalPrice=parseInt(Count)*Price; //if null equal undefined
     // this.totalPrice=Number(Count)*Price; //if null equal 0
     // let Count3=Count as number;
-    this.totalPrice = +Count * Price; //if null equal 0
+    this.totalPrice += +Count * Price; //if null equal 0
     // iobject=[
     //   {
     //     id:
@@ -127,6 +133,42 @@ iobject: Iobject[]=[];
     this.totalPriceChange.emit(this.totalPrice);
   }
 
+  buyToOptput(ProductListByClick: IProduct, Count: string) {
+ 
+      this.iobject.push({
+        id: ProductListByClick.id,
+        name: ProductListByClick.name,
+        price: ProductListByClick.price,
+        count: Count == '' ? 0 : parseInt(Count),
+      });
+      debugger
+ 
+      // const removeFromParentlist =  this.removeFromParent.filter(d => d.id!=ProductListByClick.id); 
+      //  const result =  this.iobject.filter(d => !this.removeFromParent.includes(d)); 
+      var result1:any=[];
+      if (this.removeFromParentinChild !=null && this.removeFromParentinChild.length!=0) {
+
+
+        for (let index = 0; index <= this.removeFromParentinChild.length; index++) {
+          const element = this.removeFromParentinChild[index].id;
+          result1 = this.iobject.filter(d=>d.id!=element);
+          this.ProdList.emit(result1);
+        }
+     
+    
+  
+    }
+ 
+    else{
+      this.removeFromParentinChild= [];
+      this.ProdList.emit(  this.iobject);
+    }
+ 
+ }
+
+ 
+ 
+ 
   // to convvert int to number
 
   // improve ngfor performance if i want to delete item just load same i have changed  not all item
