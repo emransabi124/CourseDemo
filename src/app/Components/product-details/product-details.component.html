@@ -1,0 +1,16 @@
+<!--to show json data reopens <p>{{prd|json}}</p> -->
+<div *ngFor="let item of prd" class="card" style="width: 18rem;">
+    <img class="card-img-top" src="{{item.imgURL}}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">{{item.name}}</h5>
+      <p class="card-text">{{item.price}}</p>
+      <p class="card-text">{{item.quantity}}</p>
+    <hr>
+    <div class="btn-group" role="group" aria-label="Basic example">
+        <button [disabled]="currPrdId==prdListArr[0]" type="button" class="btn btn-secondary" (click)="Previous()">Previous</button>
+        <button type="button" class="btn btn-secondary"(click)="goBack()">go back</button>
+        <button [disabled]="currPrdId==prdListArr[prdListArr.length-1]" type="button" class="btn btn-secondary"(click)="Next()">Next</button>
+      </div>
+      <!-- <button class="btn btn-primary" (click)="goBack()">go back</button> -->
+    </div>
+  </div>

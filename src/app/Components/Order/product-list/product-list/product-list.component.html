@@ -43,9 +43,10 @@
       <th scope="col">quantity</th>
       <th scope="col">price on $</th>
       <th scope="col">price on JOD</th>
-      <th scope="col">Iamge</th>
+      <th scope="col">Image</th>
       <th scope="col">Count</th>
-      <th scope="col">Buy</th>
+      <th scope="col">Details</th>
+      <th scope="col">Add</th>
     </tr>
   </thead>
   <tbody>
@@ -95,6 +96,29 @@
       </td>
       <!-- templetvarible-->
       <td><input #itemCount type="number" class="form-control" /></td>
+      <td> 
+                <!-- this one way to pass param and open new page -->
+        <!-- <button
+          type="button"
+          class="btn btn-primary"
+          (click)="getDetailsProduct(proditem.id)"
+  
+           
+        >
+         Details
+        </button> one way  -->
+
+        <!-- this tow way to pass param and open new page -->
+        <a
+          name=""
+          id=""
+          class="btn btn-primary"
+          [routerLink]="['/Products',proditem.id]"
+          role="button"
+          >Details</a
+        >
+        
+      </td>
       <td>
         <button
           type="button"
@@ -103,7 +127,7 @@
           (click)="buyToOptput(proditem,itemCount.value)"
            
         >
-          Total Price
+         Add
         </button>
       </td>
     </tr>

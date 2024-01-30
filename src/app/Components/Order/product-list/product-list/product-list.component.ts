@@ -3,23 +3,26 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { iif } from 'rxjs';
 import { ICategory } from 'src/app/Model/icategory';
 import { Iobject } from 'src/app/Model/iobject';
 import { IProduct } from 'src/app/Model/iproduct';
+import { StaticServiesService } from 'src/app/Services/static-servies.service';
 
 @Component({
   selector: 'app-product-list',
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
 })
-export class ProductListComponent implements OnChanges {
+export class ProductListComponent implements OnChanges,OnInit {
   @Input() catId: number = 0;
   @Input() removeFromParent:Iobject[];
-  prodList: IProduct[];
+ // prodList: IProduct[];
   iobject: Iobject[];
   prodOfCatList: IProduct[] = [];
   data: any;
@@ -32,7 +35,7 @@ export class ProductListComponent implements OnChanges {
   /**
    *
    */
-  constructor() {
+  constructor(private staticServiesService:StaticServiesService,private router:Router) {
    
     this.iobject = [];
     this.removeFromParent=[];
@@ -40,75 +43,32 @@ export class ProductListComponent implements OnChanges {
     this.totalPriceChange = new EventEmitter<number>();
     this.ProdList = new EventEmitter<Iobject[]>();
     this.orderDate = new Date();
-    this.prodList = [
-      {
-        id: 1,
-        name: 'lenovo',
-        price: 44500,
-        quantity: 2,
-        imgURL: 'https://picsum.photos/200/300',
-        categoryID: 1,
-      },
-      {
-        id: 2,
-        name: 'HP',
-        price: 55000,
-        quantity: 5,
-        imgURL: 'https://picsum.photos/200/300',
-        categoryID: 2,
-      },
-      {
-        id: 3,
-        name: 'MAC Book pro',
-        price: 85.525,
-        quantity: 45,
-        imgURL: 'https://picsum.photos/200/300',
-        categoryID: 1,
-      },
-      {
-        id: 4,
-        name: 'Lenovo thinkPad',
-        price: 628880,
-        quantity: 20,
-        imgURL: 'https://picsum.photos/200/300',
-        categoryID: 4,
-      },
-      {
-        id: 5,
-        name: 'MAC Book',
-        price: 850,
-        quantity: 5,
-        imgURL: 'https://picsum.photos/200/300',
-        categoryID: 1,
-      },
-      {
-        id: 6,
-        name: 'Iphone Pro max',
-        price: 850,
-        quantity: 3,
-        imgURL: 'https://picsum.photos/200/300',
-        categoryID: 3,
-      },
-    ];
 
-    this.prodOfCatList = this.prodList;
+
+   // this.prodOfCatList = this.prodList;
+  }
+  ngOnInit(): void {
+    this.prodOfCatList=this.staticServiesService.getAllProduct()
   }
 
   ngOnChanges(): void {
-    this.data = this.filterProductsByCatId();
+
+
+    this.prodOfCatList=this.staticServiesService.getProductByCatId(this.catId)
+    // this.data = this.filterProductsByCatId();
 
     // this.prodOfCatList= this.prodList.filter(p=>p.categoryID==this.catId);
   }
-
-  private filterProductsByCatId() {
-    if (this.catId != 0) {
-      this.prodOfCatList = this.prodList.filter(
-        (p) => p.categoryID == this.catId
-      );
-    } else {
-      this.prodOfCatList = this.prodList;
-    }
-  }
+  
+  // private filterProductsByCatId() {
+  //   if (this.catId != 0) {
+  //   //   this.prodOfCatList = this.prodList.filter(
+  //   //     (p) => p.categoryID == this.catId
+  //   //   );
+  //   // } else {
+  //   //   this.prodOfCatList = this.prodList;
+  //   // }
+  // }
 
   changeCat() {
     this.catId = 1;
@@ -174,5 +134,11 @@ export class ProductListComponent implements OnChanges {
   // improve ngfor performance if i want to delete item just load same i have changed  not all item
   ProdTrackFn(index: number, prod: IProduct): number {
     return prod.id;
+  }
+
+// to pass param to router for open page   one way 
+  getDetailsProduct(prdId:number){
+//improtent to sort param
+   this.router.navigate(['/Products',prdId]);
   }
 }

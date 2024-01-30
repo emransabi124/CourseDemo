@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ICategory } from 'src/app/Model/icategory';
 import { Iobject } from 'src/app/Model/iobject';
 
@@ -7,9 +7,11 @@ import { Iobject } from 'src/app/Model/iobject';
   templateUrl: './order-master.component.html',
   styleUrls: ['./order-master.component.css'],
 })
-export class OrderMasterComponent  implements OnChanges{
-  catList: ICategory[] = [];
+export class OrderMasterComponent  implements OnChanges,OnInit,AfterViewInit{
 
+  catList: ICategory[] = [];
+  //implement view child 
+  @ViewChild('setname') inputText!:ElementRef;
   prodList: Iobject[] = [];
   removeToChild:Iobject[]=[];
   selectedCat: number = 0;
@@ -28,12 +30,17 @@ export class OrderMasterComponent  implements OnChanges{
       { id: 4, name: 'Tech' },
     ];
   }
+  ngOnInit(): void {
+    this.catList 
+  }
   ngOnChanges(): void {
      
     this.receiveorderTotalPrice
  
   }
-
+  ngAfterViewInit(): void {
+    this.inputText.nativeElement.value="enter your name"
+  }
   // onTotalPriceChange(number: number) {
   //   this.receiveorderTotalPrice = number;
   // }
